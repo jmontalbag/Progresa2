@@ -1,0 +1,32 @@
+<% content_for :content_header  do %>
+  <section class="content-header">
+    <h1>Usuarios</h1>
+    <!--span class="btn btn-default btn-lg bt pull-right glyphicon glyphicon-plus"><%= link_to 'Crear Usuario',nuevo_usuario_path %></span-->
+  </section>
+<% end %>
+
+
+
+<section class="content invoice">
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Email</th>
+      <th>Rol</th>
+      <th>Editar</th>
+      <th>Eliminar</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @usuarios.each do |usuario|%>
+        <tr>
+          <td><%= usuario.nombre.to_s%> </td>
+          <td><%= usuario.email.to_s%> </td>
+          <td><%= usuario.rol_id.to_s%> </td>
+        </tr>
+    <%end%>
+    </tbody>
+  </table>
+  <%= will_paginate @usuarios, renderer: BootstrapPagination::Rails %>
+</section>

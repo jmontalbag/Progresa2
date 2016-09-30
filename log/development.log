@@ -1,0 +1,755 @@
+  [1m[36m (65.3ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL) [0m
+  [1m[35m (48.5ms)[0m  CREATE UNIQUE INDEX  "unique_schema_migrations" ON "schema_migrations"  ("version")
+  [1m[36mActiveRecord::SchemaMigration Load (1.2ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to CreateBeneficiarios (20160830150043)
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36m (91.1ms)[0m  [1mCREATE TABLE "beneficiarios" ("id" serial primary key, "nombre" character varying, "apellido" character varying, "rut" integer, "fecha_nacimiento" date, "edad" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160830150043"]]
+  [1m[36m (10.5ms)[0m  [1mCOMMIT[0m
+Migrating to CreateEstados (20160830150810)
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36m (85.1ms)[0m  [1mCREATE TABLE "estados" ("id" serial primary key, "nombre" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160830150810"]]
+  [1m[36m (17.2ms)[0m  [1mCOMMIT[0m
+Migrating to CreateAreas (20160830151115)
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36m (74.9ms)[0m  [1mCREATE TABLE "areas" ("id" serial primary key, "nombre" character varying, "cantidad" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35mSQL (0.5ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160830151115"]]
+  [1m[36m (153.8ms)[0m  [1mCOMMIT[0m
+Migrating to CreateRols (20160830151431)
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36m (76.5ms)[0m  [1mCREATE TABLE "roles" ("id" serial primary key, "nombre" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20160830151431"]]
+  [1m[36m (16.3ms)[0m  [1mCOMMIT[0m
+Migrating to DeviseCreateUsuarios (20160830215441)
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36m (72.1ms)[0m  [1mCREATE TABLE "usuarios" ("id" serial primary key, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "reset_password_token" character varying, "reset_password_sent_at" timestamp, "remember_created_at" timestamp, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" timestamp, "last_sign_in_at" timestamp, "current_sign_in_ip" inet, "last_sign_in_ip" inet, "rol_id" integer, "nombre" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (5.9ms)[0m  ALTER TABLE "usuarios" ADD CONSTRAINT "fk_rails_9d2c279a44"
+FOREIGN KEY ("rol_id")
+  REFERENCES "roles" ("id")
+
+  [1m[36m (42.5ms)[0m  [1mCREATE UNIQUE INDEX  "index_usuarios_on_email" ON "usuarios"  ("email")[0m
+  [1m[35m (38.1ms)[0m  CREATE UNIQUE INDEX  "index_usuarios_on_reset_password_token" ON "usuarios"  ("reset_password_token")
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160830215441"]]
+  [1m[35m (14.5ms)[0m  COMMIT
+Migrating to ChangeTypeRut (20160928031046)
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35m (113.6ms)[0m  ALTER TABLE "beneficiarios" ALTER COLUMN "rut" TYPE character varying
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160928031046"]]
+  [1m[35m (12.0ms)[0m  COMMIT
+Migrating to CreateClasificacions (20160930155708)
+  [1m[36m (0.7ms)[0m  [1mBEGIN[0m
+  [1m[35m (65.3ms)[0m  CREATE TABLE "clasificacions" ("id" serial primary key, "nombre" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160930155708"]]
+  [1m[35m (13.6ms)[0m  COMMIT
+Migrating to CreateObjetivos (20160930155716)
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35m (77.4ms)[0m  CREATE TABLE "objetivos" ("id" serial primary key, "texto" text, "nombre" character varying, "clasificacion_id" integer, "area_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (45.8ms)[0m  [1mCREATE  INDEX  "index_objetivos_on_clasificacion_id" ON "objetivos"  ("clasificacion_id")[0m
+  [1m[35m (41.8ms)[0m  CREATE  INDEX  "index_objetivos_on_area_id" ON "objetivos"  ("area_id")
+  [1m[36m (4.4ms)[0m  [1mALTER TABLE "objetivos" ADD CONSTRAINT "fk_rails_d83f4f91cd"
+FOREIGN KEY ("clasificacion_id")
+  REFERENCES "clasificacions" ("id")
+[0m
+  [1m[35m (3.0ms)[0m  ALTER TABLE "objetivos" ADD CONSTRAINT "fk_rails_409ce92c8b"
+FOREIGN KEY ("area_id")
+  REFERENCES "areas" ("id")
+
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160930155716"]]
+  [1m[35m (13.4ms)[0m  COMMIT
+Migrating to CreateHistorials (20160930155722)
+  [1m[36m (0.7ms)[0m  [1mBEGIN[0m
+  [1m[35m (42.8ms)[0m  CREATE TABLE "historials" ("id" serial primary key, "beneficiario_id" integer, "usuario_id" integer, "estado_id" integer, "objetivo_id" integer, "fecha" date, "hora" time, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36m (45.2ms)[0m  [1mCREATE  INDEX  "index_historials_on_beneficiario_id" ON "historials"  ("beneficiario_id")[0m
+  [1m[35m (48.2ms)[0m  CREATE  INDEX  "index_historials_on_usuario_id" ON "historials"  ("usuario_id")
+  [1m[36m (37.9ms)[0m  [1mCREATE  INDEX  "index_historials_on_estado_id" ON "historials"  ("estado_id")[0m
+  [1m[35m (38.4ms)[0m  CREATE  INDEX  "index_historials_on_objetivo_id" ON "historials"  ("objetivo_id")
+  [1m[36m (3.2ms)[0m  [1mALTER TABLE "historials" ADD CONSTRAINT "fk_rails_2fa07393de"
+FOREIGN KEY ("beneficiario_id")
+  REFERENCES "beneficiarios" ("id")
+[0m
+  [1m[35m (2.9ms)[0m  ALTER TABLE "historials" ADD CONSTRAINT "fk_rails_a383ec89c6"
+FOREIGN KEY ("usuario_id")
+  REFERENCES "usuarios" ("id")
+
+  [1m[36m (2.8ms)[0m  [1mALTER TABLE "historials" ADD CONSTRAINT "fk_rails_189b6a8ebd"
+FOREIGN KEY ("estado_id")
+  REFERENCES "estados" ("id")
+[0m
+  [1m[35m (2.8ms)[0m  ALTER TABLE "historials" ADD CONSTRAINT "fk_rails_4346b5e1bf"
+FOREIGN KEY ("objetivo_id")
+  REFERENCES "objetivos" ("id")
+
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20160930155722"]]
+  [1m[35m (12.6ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (7.3ms)[0m  SELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'areas'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+
+  [1m[36m (5.9ms)[0m  [1mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'beneficiarios'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (6.3ms)[0m  SELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'clasificacions'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+
+  [1m[36m (6.3ms)[0m  [1mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'estados'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (6.5ms)[0m  SELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'historials'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+
+  [1m[36m (6.5ms)[0m  [1mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'objetivos'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (7.0ms)[0m  SELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'roles'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+
+  [1m[36m (7.1ms)[0m  [1mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'usuarios'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+
+
+Started GET "/" for 127.0.0.1 at 2016-09-30 14:22:07 -0300
+  [1m[36mActiveRecord::SchemaMigration Load (1.5ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by UsuariosController#index as HTML
+  [1m[35mUsuario Load (2.6ms)[0m  SELECT  "usuarios".* FROM "usuarios"  ORDER BY id ASC LIMIT 10 OFFSET 0
+  Rendered usuarios/index.html.erb within layouts/application (17.9ms)
+DEPRECATION WARNING: Extra .css in SCSS file is unnecessary. Rename /usr/local/lib/ruby/gems/2.2.0/gems/adminlte-generators-0.2.4/vendor/assets/stylesheets/adminlte.css.scss to /usr/local/lib/ruby/gems/2.2.0/gems/adminlte-generators-0.2.4/vendor/assets/stylesheets/adminlte.scss. (called from _app_views_layouts_application_html_erb__3365858349544917338_47139194439240 at /home/pepino/Escritorio/progresa/app/views/layouts/application.html.erb:16)
+DEPRECATION WARNING: Extra .css in SCSS file is unnecessary. Rename /usr/local/lib/ruby/gems/2.2.0/gems/adminlte-generators-0.2.4/vendor/assets/stylesheets/font-awesome4.0.3.css.scss to /usr/local/lib/ruby/gems/2.2.0/gems/adminlte-generators-0.2.4/vendor/assets/stylesheets/font-awesome4.0.3.scss. (called from _app_views_layouts_application_html_erb__3365858349544917338_47139194439240 at /home/pepino/Escritorio/progresa/app/views/layouts/application.html.erb:16)
+DEPRECATION WARNING: Extra .css in SCSS file is unnecessary. Rename /usr/local/lib/ruby/gems/2.2.0/gems/adminlte-generators-0.2.4/vendor/assets/stylesheets/ionicons.css.scss to /usr/local/lib/ruby/gems/2.2.0/gems/adminlte-generators-0.2.4/vendor/assets/stylesheets/ionicons.scss. (called from _app_views_layouts_application_html_erb__3365858349544917338_47139194439240 at /home/pepino/Escritorio/progresa/app/views/layouts/application.html.erb:16)
+DEPRECATION WARNING: Extra .css in SCSS file is unnecessary. Rename /usr/local/lib/ruby/gems/2.2.0/gems/adminlte-generators-0.2.4/vendor/assets/stylesheets/adminlte.css.scss to /usr/local/lib/ruby/gems/2.2.0/gems/adminlte-generators-0.2.4/vendor/assets/stylesheets/adminlte.scss. (called from _app_views_layouts_application_html_erb__3365858349544917338_47139194439240 at /home/pepino/Escritorio/progresa/app/views/layouts/application.html.erb:16)
+DEPRECATION WARNING: Extra .css in SCSS file is unnecessary. Rename /usr/local/lib/ruby/gems/2.2.0/gems/adminlte-generators-0.2.4/vendor/assets/stylesheets/font-awesome4.0.3.css.scss to /usr/local/lib/ruby/gems/2.2.0/gems/adminlte-generators-0.2.4/vendor/assets/stylesheets/font-awesome4.0.3.scss. (called from _app_views_layouts_application_html_erb__3365858349544917338_47139194439240 at /home/pepino/Escritorio/progresa/app/views/layouts/application.html.erb:16)
+DEPRECATION WARNING: Extra .css in SCSS file is unnecessary. Rename /usr/local/lib/ruby/gems/2.2.0/gems/adminlte-generators-0.2.4/vendor/assets/stylesheets/ionicons.css.scss to /usr/local/lib/ruby/gems/2.2.0/gems/adminlte-generators-0.2.4/vendor/assets/stylesheets/ionicons.scss. (called from _app_views_layouts_application_html_erb__3365858349544917338_47139194439240 at /home/pepino/Escritorio/progresa/app/views/layouts/application.html.erb:16)
+  Rendered layouts/_application_header.html.erb (1.4ms)
+  Rendered layouts/_application_sidebar.html.erb (2.4ms)
+Completed 200 OK in 10939ms (Views: 10916.0ms | ActiveRecord: 4.7ms)
+
+
+Started GET "/assets/adminlte_overrides.self-b533cfbb02a9e9a466901d1ebf49a0aa1b1b8541037dc5ca12d08907a957b812.css?body=1" for 127.0.0.1 at 2016-09-30 14:22:18 -0300
+
+
+Started GET "/beneficiarios" for 127.0.0.1 at 2016-09-30 14:22:24 -0300
+Processing by BeneficiariosController#index as HTML
+Completed 401 Unauthorized in 11ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/usuarios/sign_in" for 127.0.0.1 at 2016-09-30 14:22:24 -0300
+Processing by Devise::SessionsController#new as HTML
+  Rendered devise/shared/_links.html.erb (3.3ms)
+  Rendered devise/sessions/new.html.erb within layouts/login (34.5ms)
+Completed 200 OK in 88ms (Views: 52.2ms | ActiveRecord: 6.8ms)
+
+
+Started GET "/usuarios/sign_up" for 127.0.0.1 at 2016-09-30 14:22:33 -0300
+Processing by Devise::RegistrationsController#new as HTML
+  Rendered devise/shared/_links.html.erb (1.6ms)
+  Rendered devise/registrations/new.html.erb within layouts/login (11.1ms)
+Completed 200 OK in 25ms (Views: 21.4ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/usuarios" for 127.0.0.1 at 2016-09-30 14:22:44 -0300
+Processing by Devise::RegistrationsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"4+1kXHpZcuQCaT4ER7GDQfYpst7vRgFtuTt8a2R5C1XZ/3PfvnNd9j86c2uCTuWaYfSR6gtLmaU7xRauDYc8wg==", "usuario"=>{"email"=>"jose@algo.cl", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "commit"=>"Sign up"}
+  [1m[36m (0.3ms)[0m  [1mBEGIN[0m
+  [1m[35mUsuario Exists (2.2ms)[0m  SELECT  1 AS one FROM "usuarios" WHERE "usuarios"."email" = 'jose@algo.cl' LIMIT 1
+  [1m[36mSQL (1.1ms)[0m  [1mINSERT INTO "usuarios" ("email", "encrypted_password", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["email", "jose@algo.cl"], ["encrypted_password", "$2a$11$DUk55Afbw6dpjC/fhEfFl.v5AhiPZhMrESVyIYiKrT6g3U3eSGBYO"], ["created_at", "2016-09-30 17:22:44.592529"], ["updated_at", "2016-09-30 17:22:44.592529"]]
+  [1m[35m (16.4ms)[0m  COMMIT
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (1.3ms)[0m  UPDATE "usuarios" SET "last_sign_in_at" = $1, "current_sign_in_at" = $2, "last_sign_in_ip" = $3, "current_sign_in_ip" = $4, "sign_in_count" = $5, "updated_at" = $6 WHERE "usuarios"."id" = $7  [["last_sign_in_at", "2016-09-30 17:22:44.616250"], ["current_sign_in_at", "2016-09-30 17:22:44.616250"], ["last_sign_in_ip", "127.0.0.1/32"], ["current_sign_in_ip", "127.0.0.1/32"], ["sign_in_count", 1], ["updated_at", "2016-09-30 17:22:44.618618"], ["id", 1]]
+  [1m[36m (13.0ms)[0m  [1mCOMMIT[0m
+Redirected to http://localhost:3000/beneficiarios
+Completed 302 Found in 334ms (ActiveRecord: 35.1ms)
+
+
+Started GET "/beneficiarios" for 127.0.0.1 at 2016-09-30 14:22:44 -0300
+Processing by BeneficiariosController#index as HTML
+  [1m[35mUsuario Load (0.6ms)[0m  SELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1  ORDER BY "usuarios"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mBeneficiario Load (1.9ms)[0m  [1mSELECT  "beneficiarios".* FROM "beneficiarios"  ORDER BY id ASC LIMIT 10 OFFSET 0[0m
+  Rendered beneficiarios/index.html.erb within layouts/application (10.2ms)
+  Rendered layouts/_application_header.html.erb (0.4ms)
+  Rendered layouts/_application_sidebar.html.erb (1.1ms)
+Completed 200 OK in 132ms (Views: 116.4ms | ActiveRecord: 4.4ms)
+
+
+Started GET "/areas" for 127.0.0.1 at 2016-09-30 14:22:49 -0300
+Processing by AreasController#index as HTML
+  [1m[35mUsuario Load (0.9ms)[0m  SELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1  ORDER BY "usuarios"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mArea Load (1.3ms)[0m  [1mSELECT  "areas".* FROM "areas"  ORDER BY id ASC LIMIT 10 OFFSET 0[0m
+  Rendered areas/index.html.erb within layouts/application (7.6ms)
+  Rendered layouts/_application_header.html.erb (0.4ms)
+  Rendered layouts/_application_sidebar.html.erb (0.8ms)
+Completed 200 OK in 141ms (Views: 124.0ms | ActiveRecord: 4.1ms)
+
+
+Started DELETE "/usuarios/sign_out" for 127.0.0.1 at 2016-09-30 14:22:55 -0300
+Processing by Devise::SessionsController#destroy as HTML
+  Parameters: {"authenticity_token"=>"jzHZXKXjZbeyKKyiGvyjOcpC27mo3KYLkmVyUael2/m1I87fYclKpY974c3fA8XiXZ/4jUzRPsMQmxiUzlvsbg=="}
+  [1m[35mUsuario Load (1.0ms)[0m  SELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1  ORDER BY "usuarios"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.6ms)[0m  COMMIT
+Redirected to http://localhost:3000/
+Completed 302 Found in 17ms (ActiveRecord: 1.9ms)
+
+
+Started GET "/" for 127.0.0.1 at 2016-09-30 14:22:55 -0300
+Processing by UsuariosController#index as HTML
+  [1m[36mUsuario Load (1.0ms)[0m  [1mSELECT  "usuarios".* FROM "usuarios"  ORDER BY id ASC LIMIT 10 OFFSET 0[0m
+  Rendered usuarios/index.html.erb within layouts/application (3.7ms)
+  Rendered layouts/_application_header.html.erb (0.3ms)
+  Rendered layouts/_application_sidebar.html.erb (0.9ms)
+Completed 200 OK in 99ms (Views: 96.6ms | ActiveRecord: 1.0ms)
+
+
+Started GET "/beneficiarios" for 127.0.0.1 at 2016-09-30 14:23:01 -0300
+Processing by BeneficiariosController#index as HTML
+Completed 401 Unauthorized in 2ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/usuarios/sign_in" for 127.0.0.1 at 2016-09-30 14:23:01 -0300
+Processing by Devise::SessionsController#new as HTML
+  Rendered devise/shared/_links.html.erb (1.7ms)
+  Rendered devise/sessions/new.html.erb within layouts/login (7.9ms)
+Completed 200 OK in 13ms (Views: 10.7ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/usuarios/sign_in" for 127.0.0.1 at 2016-09-30 14:23:31 -0300
+Processing by Devise::SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"iJbFml1OW6q4tWs1zDIH7mq7ObIMxFA2gwKlP8y+p+JdTd8zZ3bnfG31TPv3iDzFhEIHrST9UzUg/DgObKqZzQ==", "usuario"=>{"email"=>"jose@algo.cl", "password"=>"[FILTERED]", "remember_me"=>"0"}, "commit"=>"Ingresar"}
+  [1m[35mUsuario Load (0.9ms)[0m  SELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."email" = $1  ORDER BY "usuarios"."id" ASC LIMIT 1  [["email", "jose@algo.cl"]]
+  [1m[36m (0.3ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.5ms)[0m  UPDATE "usuarios" SET "current_sign_in_at" = $1, "sign_in_count" = $2, "updated_at" = $3 WHERE "usuarios"."id" = $4  [["current_sign_in_at", "2016-09-30 17:23:31.298710"], ["sign_in_count", 2], ["updated_at", "2016-09-30 17:23:31.300971"], ["id", 1]]
+  [1m[36m (11.5ms)[0m  [1mCOMMIT[0m
+Redirected to http://localhost:3000/beneficiarios
+Completed 302 Found in 206ms (ActiveRecord: 13.2ms)
+
+
+Started GET "/beneficiarios" for 127.0.0.1 at 2016-09-30 14:23:31 -0300
+Processing by BeneficiariosController#index as HTML
+  [1m[35mUsuario Load (0.7ms)[0m  SELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1  ORDER BY "usuarios"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mBeneficiario Load (0.8ms)[0m  [1mSELECT  "beneficiarios".* FROM "beneficiarios"  ORDER BY id ASC LIMIT 10 OFFSET 0[0m
+  Rendered beneficiarios/index.html.erb within layouts/application (2.9ms)
+  Rendered layouts/_application_header.html.erb (0.5ms)
+  Rendered layouts/_application_sidebar.html.erb (1.1ms)
+Completed 200 OK in 105ms (Views: 99.8ms | ActiveRecord: 1.5ms)
+
+
+Started GET "/beneficiarios" for 127.0.0.1 at 2016-09-30 14:23:33 -0300
+Processing by BeneficiariosController#index as HTML
+  [1m[35mUsuario Load (0.9ms)[0m  SELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1  ORDER BY "usuarios"."id" ASC LIMIT 1  [["id", 1]]
+  [1m[36mBeneficiario Load (1.0ms)[0m  [1mSELECT  "beneficiarios".* FROM "beneficiarios"  ORDER BY id ASC LIMIT 10 OFFSET 0[0m
+  Rendered beneficiarios/index.html.erb within layouts/application (4.5ms)
+  Rendered layouts/_application_header.html.erb (0.5ms)
+  Rendered layouts/_application_sidebar.html.erb (1.4ms)
+Completed 200 OK in 137ms (Views: 131.5ms | ActiveRecord: 1.9ms)
+
+
+Started GET "/beneficiarios/nuevo" for 127.0.0.1 at 2016-09-30 14:23:39 -0300
+Processing by BeneficiariosController#nuevo as HTML
+  [1m[35mUsuario Load (0.9ms)[0m  SELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1  ORDER BY "usuarios"."id" ASC LIMIT 1  [["id", 1]]
+  Rendered beneficiarios/_form.html.erb (30.3ms)
+  Rendered beneficiarios/nuevo.html.erb within layouts/application (33.7ms)
+  Rendered layouts/_application_header.html.erb (0.4ms)
+  Rendered layouts/_application_sidebar.html.erb (1.5ms)
+Completed 200 OK in 175ms (Views: 155.8ms | ActiveRecord: 2.9ms)
+
+
+Started POST "/beneficiarios" for 127.0.0.1 at 2016-09-30 14:24:48 -0300
+Processing by BeneficiariosController#crear as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"l83CeGsS2pTboeJKWVvbbx53O0pcjUDZEQOO4Bwoiq9qohe7M55PBbPCk34JrhjtyARlZQqNL5bI9zRe+7WNhg==", "beneficiario"=>{"nombre"=>"Alber tito", "apellido"=>"Vasquez", "rut"=>"17768754-5", "fecha_nacimiento"=>"1991-03-07", "edad"=>"25"}, "commit"=>"Create Beneficiario"}
+  [1m[36mUsuario Load (0.8ms)[0m  [1mSELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1  ORDER BY "usuarios"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.6ms)[0m  BEGIN
+  [1m[36mSQL (1.5ms)[0m  [1mINSERT INTO "beneficiarios" ("nombre", "apellido", "rut", "fecha_nacimiento", "edad", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["nombre", "Alber tito"], ["apellido", "Vasquez"], ["rut", "17768754-5"], ["fecha_nacimiento", "1991-03-07"], ["edad", 25], ["created_at", "2016-09-30 17:24:48.026833"], ["updated_at", "2016-09-30 17:24:48.026833"]]
+  [1m[35m (31.6ms)[0m  COMMIT
+Redirected to http://localhost:3000/beneficiarios/1
+Completed 302 Found in 50ms (ActiveRecord: 34.5ms)
+
+
+Started GET "/beneficiarios/1" for 127.0.0.1 at 2016-09-30 14:24:48 -0300
+Processing by BeneficiariosController#mostrar as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mBeneficiario Load (0.9ms)[0m  [1mSELECT  "beneficiarios".* FROM "beneficiarios" WHERE "beneficiarios"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mUsuario Load (0.7ms)[0m  SELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1  ORDER BY "usuarios"."id" ASC LIMIT 1  [["id", 1]]
+  Rendered beneficiarios/mostrar.html.erb within layouts/application (3.0ms)
+  Rendered layouts/_application_header.html.erb (0.3ms)
+  Rendered layouts/_application_sidebar.html.erb (1.1ms)
+Completed 200 OK in 130ms (Views: 102.1ms | ActiveRecord: 1.6ms)
+
+
+Started GET "/beneficiarios" for 127.0.0.1 at 2016-09-30 14:24:52 -0300
+Processing by BeneficiariosController#index as HTML
+  [1m[36mUsuario Load (0.7ms)[0m  [1mSELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1  ORDER BY "usuarios"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mBeneficiario Load (1.0ms)[0m  SELECT  "beneficiarios".* FROM "beneficiarios"  ORDER BY id ASC LIMIT 10 OFFSET 0
+  Rendered beneficiarios/index.html.erb within layouts/application (6.7ms)
+  Rendered layouts/_application_header.html.erb (0.3ms)
+  Rendered layouts/_application_sidebar.html.erb (0.9ms)
+Completed 200 OK in 132ms (Views: 125.9ms | ActiveRecord: 1.7ms)
+
+
+Started GET "/areas" for 127.0.0.1 at 2016-09-30 14:24:58 -0300
+Processing by AreasController#index as HTML
+  [1m[36mUsuario Load (0.6ms)[0m  [1mSELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1  ORDER BY "usuarios"."id" ASC LIMIT 1[0m  [["id", 1]]
+  [1m[35mArea Load (1.6ms)[0m  SELECT  "areas".* FROM "areas"  ORDER BY id ASC LIMIT 10 OFFSET 0
+  Rendered areas/index.html.erb within layouts/application (3.5ms)
+  Rendered layouts/_application_header.html.erb (0.5ms)
+  Rendered layouts/_application_sidebar.html.erb (1.1ms)
+Completed 200 OK in 135ms (Views: 127.4ms | ActiveRecord: 2.2ms)
+
+
+Started GET "/historials" for 127.0.0.1 at 2016-09-30 14:25:00 -0300
+Processing by HistorialsController#index as HTML
+  [1m[36mHistorial Load (1.7ms)[0m  [1mSELECT  "historials".* FROM "historials"  ORDER BY id ASC LIMIT 10 OFFSET 0[0m
+  Rendered historials/index.html.erb within layouts/application (9.9ms)
+  Rendered layouts/_application_header.html.erb (0.6ms)
+  Rendered layouts/_application_sidebar.html.erb (1.4ms)
+Completed 200 OK in 187ms (Views: 164.6ms | ActiveRecord: 4.6ms)
+
+
+Started GET "/objetivos" for 127.0.0.1 at 2016-09-30 14:25:02 -0300
+Processing by ObjetivosController#index as HTML
+  [1m[35mObjetivo Load (1.6ms)[0m  SELECT  "objetivos".* FROM "objetivos"  ORDER BY id ASC LIMIT 10 OFFSET 0
+  Rendered objetivos/index.html.erb within layouts/application (10.0ms)
+  Rendered layouts/_application_header.html.erb (0.6ms)
+  Rendered layouts/_application_sidebar.html.erb (1.6ms)
+Completed 200 OK in 148ms (Views: 134.0ms | ActiveRecord: 4.5ms)
+  [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (1.3ms)[0m  [1mINSERT INTO "areas" ("nombre", "cantidad", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["nombre", "Corporal"], ["cantidad", 17], ["created_at", "2016-09-30 17:25:22.986352"], ["updated_at", "2016-09-30 17:25:22.986352"]]
+  [1m[35m (21.2ms)[0m  COMMIT
+  [1m[36m (0.3ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "areas" ("nombre", "cantidad", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["nombre", "Afectiva"], ["cantidad", 17], ["created_at", "2016-09-30 17:25:23.018331"], ["updated_at", "2016-09-30 17:25:23.018331"]]
+  [1m[36m (14.8ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36mSQL (1.1ms)[0m  [1mINSERT INTO "areas" ("nombre", "cantidad", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["nombre", "Social"], ["cantidad", 17], ["created_at", "2016-09-30 17:25:23.052255"], ["updated_at", "2016-09-30 17:25:23.052255"]]
+  [1m[35m (15.1ms)[0m  COMMIT
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "areas" ("nombre", "cantidad", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["nombre", "Espiritual"], ["cantidad", 17], ["created_at", "2016-09-30 17:25:23.074514"], ["updated_at", "2016-09-30 17:25:23.074514"]]
+  [1m[36m (15.2ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36mSQL (0.7ms)[0m  [1mINSERT INTO "areas" ("nombre", "cantidad", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["nombre", "Creativa"], ["cantidad", 17], ["created_at", "2016-09-30 17:25:23.096824"], ["updated_at", "2016-09-30 17:25:23.096824"]]
+  [1m[35m (4.7ms)[0m  COMMIT
+  [1m[36m (0.3ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.7ms)[0m  INSERT INTO "areas" ("nombre", "cantidad", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"  [["nombre", "Caracter"], ["cantidad", 17], ["created_at", "2016-09-30 17:25:23.107196"], ["updated_at", "2016-09-30 17:25:23.107196"]]
+  [1m[36m (5.9ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36mSQL (1.0ms)[0m  [1mINSERT INTO "clasificacions" ("nombre", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["nombre", "Infancia Media"], ["created_at", "2016-09-30 17:25:23.134950"], ["updated_at", "2016-09-30 17:25:23.134950"]]
+  [1m[35m (10.8ms)[0m  COMMIT
+  [1m[36m (0.3ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.7ms)[0m  INSERT INTO "clasificacions" ("nombre", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"  [["nombre", "Infancia Tardia"], ["created_at", "2016-09-30 17:25:23.151498"], ["updated_at", "2016-09-30 17:25:23.151498"]]
+  [1m[36m (5.9ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.3ms)[0m  BEGIN
+  [1m[36mSQL (2.2ms)[0m  [1mINSERT INTO "objetivos" ("texto", "nombre", "clasificacion_id", "area_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["texto", "Objetivo1"], ["nombre", "Objetivo1"], ["clasificacion_id", 1], ["area_id", 1], ["created_at", "2016-09-30 17:25:23.184709"], ["updated_at", "2016-09-30 17:25:23.184709"]]
+  [1m[35m (15.2ms)[0m  COMMIT
+  [1m[36m (0.3ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (1.2ms)[0m  INSERT INTO "objetivos" ("texto", "nombre", "clasificacion_id", "area_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"  [["texto", "Objetivo2"], ["nombre", "Objetivo1"], ["clasificacion_id", 1], ["area_id", 2], ["created_at", "2016-09-30 17:25:23.207585"], ["updated_at", "2016-09-30 17:25:23.207585"]]
+  [1m[36m (15.6ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.3ms)[0m  BEGIN
+  [1m[36mSQL (1.2ms)[0m  [1mINSERT INTO "objetivos" ("texto", "nombre", "clasificacion_id", "area_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["texto", "Objetivo3"], ["nombre", "Objetivo1"], ["clasificacion_id", 1], ["area_id", 3], ["created_at", "2016-09-30 17:25:23.229484"], ["updated_at", "2016-09-30 17:25:23.229484"]]
+  [1m[35m (4.7ms)[0m  COMMIT
+  [1m[36m (0.3ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (1.1ms)[0m  INSERT INTO "objetivos" ("texto", "nombre", "clasificacion_id", "area_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"  [["texto", "Objetivo4"], ["nombre", "Objetivo1"], ["clasificacion_id", 2], ["area_id", 4], ["created_at", "2016-09-30 17:25:23.240488"], ["updated_at", "2016-09-30 17:25:23.240488"]]
+  [1m[36m (5.0ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.3ms)[0m  BEGIN
+  [1m[36mSQL (1.2ms)[0m  [1mINSERT INTO "objetivos" ("texto", "nombre", "clasificacion_id", "area_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["texto", "Objetivo5"], ["nombre", "Objetivo1"], ["clasificacion_id", 2], ["area_id", 5], ["created_at", "2016-09-30 17:25:23.251503"], ["updated_at", "2016-09-30 17:25:23.251503"]]
+  [1m[35m (5.3ms)[0m  COMMIT
+  [1m[36m (0.3ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (1.4ms)[0m  INSERT INTO "objetivos" ("texto", "nombre", "clasificacion_id", "area_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"  [["texto", "Objetivo6"], ["nombre", "Objetivo1"], ["clasificacion_id", 2], ["area_id", 6], ["created_at", "2016-09-30 17:25:23.262735"], ["updated_at", "2016-09-30 17:25:23.262735"]]
+  [1m[36m (15.7ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36mSQL (1.0ms)[0m  [1mINSERT INTO "estados" ("nombre", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["nombre", "No seleccionado"], ["created_at", "2016-09-30 17:25:23.302378"], ["updated_at", "2016-09-30 17:25:23.302378"]]
+  [1m[35m (9.6ms)[0m  COMMIT
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (0.7ms)[0m  INSERT INTO "estados" ("nombre", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"  [["nombre", "Seleccionado"], ["created_at", "2016-09-30 17:25:23.318100"], ["updated_at", "2016-09-30 17:25:23.318100"]]
+  [1m[36m (6.0ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.3ms)[0m  BEGIN
+  [1m[36mSQL (0.6ms)[0m  [1mINSERT INTO "estados" ("nombre", "created_at", "updated_at") VALUES ($1, $2, $3) RETURNING "id"[0m  [["nombre", "Completado"], ["created_at", "2016-09-30 17:25:23.329114"], ["updated_at", "2016-09-30 17:25:23.329114"]]
+  [1m[35m (6.1ms)[0m  COMMIT
+  [1m[36m (0.5ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (5.1ms)[0m  INSERT INTO "historials" ("usuario_id", "beneficiario_id", "estado_id", "objetivo_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"  [["usuario_id", 1], ["beneficiario_id", 1], ["estado_id", 1], ["objetivo_id", 1], ["created_at", "2016-09-30 17:25:23.364600"], ["updated_at", "2016-09-30 17:25:23.364600"]]
+  [1m[36m (9.6ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.3ms)[0m  BEGIN
+  [1m[36mSQL (1.5ms)[0m  [1mINSERT INTO "historials" ("usuario_id", "beneficiario_id", "estado_id", "objetivo_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["usuario_id", 1], ["beneficiario_id", 1], ["estado_id", 1], ["objetivo_id", 1], ["created_at", "2016-09-30 17:25:23.384795"], ["updated_at", "2016-09-30 17:25:23.384795"]]
+  [1m[35m (15.3ms)[0m  COMMIT
+  [1m[36m (0.3ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (1.7ms)[0m  INSERT INTO "historials" ("usuario_id", "beneficiario_id", "estado_id", "objetivo_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"  [["usuario_id", 1], ["beneficiario_id", 1], ["estado_id", 1], ["objetivo_id", 1], ["created_at", "2016-09-30 17:25:23.407221"], ["updated_at", "2016-09-30 17:25:23.407221"]]
+  [1m[36m (14.8ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  BEGIN
+  [1m[36mSQL (1.6ms)[0m  [1mINSERT INTO "historials" ("usuario_id", "beneficiario_id", "estado_id", "objetivo_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["usuario_id", 1], ["beneficiario_id", 1], ["estado_id", 1], ["objetivo_id", 1], ["created_at", "2016-09-30 17:25:23.429395"], ["updated_at", "2016-09-30 17:25:23.429395"]]
+  [1m[35m (15.0ms)[0m  COMMIT
+  [1m[36m (0.3ms)[0m  [1mBEGIN[0m
+  [1m[35mSQL (1.7ms)[0m  INSERT INTO "historials" ("usuario_id", "beneficiario_id", "estado_id", "objetivo_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"  [["usuario_id", 1], ["beneficiario_id", 1], ["estado_id", 1], ["objetivo_id", 1], ["created_at", "2016-09-30 17:25:23.451907"], ["updated_at", "2016-09-30 17:25:23.451907"]]
+  [1m[36m (13.9ms)[0m  [1mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  BEGIN
+  [1m[36mSQL (1.9ms)[0m  [1mINSERT INTO "historials" ("usuario_id", "beneficiario_id", "estado_id", "objetivo_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["usuario_id", 1], ["beneficiario_id", 1], ["estado_id", 1], ["objetivo_id", 1], ["created_at", "2016-09-30 17:25:23.474347"], ["updated_at", "2016-09-30 17:25:23.474347"]]
+  [1m[35m (13.6ms)[0m  COMMIT
+
+
+Started GET "/objetivos" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+Processing by ObjetivosController#index as HTML
+  [1m[36mObjetivo Load (1.0ms)[0m  [1mSELECT  "objetivos".* FROM "objetivos"  ORDER BY id ASC LIMIT 10 OFFSET 0[0m
+  Rendered objetivos/index.html.erb within layouts/application (15.5ms)
+  Rendered layouts/_application_header.html.erb (0.5ms)
+  Rendered layouts/_application_sidebar.html.erb (0.9ms)
+Completed 200 OK in 117ms (Views: 112.6ms | ActiveRecord: 2.6ms)
+
+
+Started GET "/assets/adminlte_overrides.self-b533cfbb02a9e9a466901d1ebf49a0aa1b1b8541037dc5ca12d08907a957b812.css?body=1" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+
+
+Started GET "/assets/beneficiarios.self-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.css?body=1" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+
+
+Started GET "/assets/application.self-e80e8f2318043e8af94dddc2adad5a4f09739a8ebb323b3ab31cd71d45fd9113.css?body=1" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+
+
+Started GET "/assets/jquery.self-bd7ddd393353a8d2480a622e80342adf488fb6006d667e8b42e4c0073393abee.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+
+
+Started GET "/assets/jquery_ujs.self-784a997f6726036b1993eb2217c9cb558e1cbb801c6da88105588c56f13b466a.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+
+
+Started GET "/assets/turbolinks.self-c5acd7a204f5f25ce7a1d8a0e4d92e28d34c9e2df2c7371cd7af88e147e4ad82.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+
+
+Started GET "/assets/bootstrap/collapse.self-9b54bcf1950a1371fd1cdfd37d95d7966abebe4a79c43d5502c2751a82719c18.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+
+
+Started GET "/assets/bootstrap/modal.self-5b9e27c9d9dac4c215e715f0ee799b2de30891d639b1541c400c56e65728bf29.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+
+
+Started GET "/assets/bootstrap/button.self-8da28f1a43593a42fc630ee05aa5c881ab538ecaef6d93b888c910d6c57491a3.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+
+
+Started GET "/assets/bootstrap/affix.self-14e8048ca0870e6a1ab98e7273aadcf9f101b9b77cd62dc856e5c3345bfe2897.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+
+
+Started GET "/assets/bootstrap/tab.self-b352edad3a7a2084f2dec3ec280730716655b27b74ab10403bc959c77f914156.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+
+
+Started GET "/assets/bootstrap/alert.self-fc6713d45755bec3837e6a5fd8e3d1c40014f490838f7b2a487f5657e4b078aa.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+
+
+Started GET "/assets/bootstrap/transition.self-2da0d063949ae9f31354b8e9e555006e277d06fd03f632cb90d71832db7c7c9a.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+
+
+Started GET "/assets/bootstrap/tooltip.self-f250a129286fa427aeac73823d1b156628fbe543780fb4779d3964bf3e3b1a67.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+
+
+Started GET "/assets/bootstrap/popover.self-051f09665d8186f784c41bab08d23a7e6dfe0c620971daa896cd523d5c94527b.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+
+
+Started GET "/assets/bootstrap/scrollspy.self-571a56390bb666998810e4cc6845dcf43b862380c962ccad8915bbac46a9f5c3.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+
+
+Started GET "/assets/bootstrap/dropdown.self-1b84e25b7c393b2ba0aa65a56983b4658e0f94acbb886138ad22de73a5b5f541.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+
+
+Started GET "/assets/bootstrap/carousel.self-67b2cc75310f1af982ce46e8432341ef7448488f1ef957171335489342f91b31.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+
+
+Started GET "/assets/bootstrap.self-fbfa5ad7d9aa0afe439ec4ff3883acc4cb92b62cb67c40d674320c9aa1d4642d.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:34 -0300
+
+
+Started GET "/assets/adminlte.self-15aa5e4c8604597e2ea8e8a7a932deaa149a33e61f26efb184735e94fe042f05.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:35 -0300
+
+
+Started GET "/assets/areas.self-877aef30ae1b040ab8a3aba4e3e309a11d7f2612f44dde450b5c157aa5f95c05.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:35 -0300
+
+
+Started GET "/assets/beneficiarios.self-877aef30ae1b040ab8a3aba4e3e309a11d7f2612f44dde450b5c157aa5f95c05.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:35 -0300
+
+
+Started GET "/assets/clasificaciones.self-877aef30ae1b040ab8a3aba4e3e309a11d7f2612f44dde450b5c157aa5f95c05.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:35 -0300
+
+
+Started GET "/assets/estados.self-877aef30ae1b040ab8a3aba4e3e309a11d7f2612f44dde450b5c157aa5f95c05.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:35 -0300
+
+
+Started GET "/assets/historials.self-877aef30ae1b040ab8a3aba4e3e309a11d7f2612f44dde450b5c157aa5f95c05.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:35 -0300
+
+
+Started GET "/assets/objetivos.self-877aef30ae1b040ab8a3aba4e3e309a11d7f2612f44dde450b5c157aa5f95c05.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:35 -0300
+
+
+Started GET "/assets/roles.self-877aef30ae1b040ab8a3aba4e3e309a11d7f2612f44dde450b5c157aa5f95c05.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:35 -0300
+
+
+Started GET "/assets/usuarios.self-877aef30ae1b040ab8a3aba4e3e309a11d7f2612f44dde450b5c157aa5f95c05.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:35 -0300
+
+
+Started GET "/assets/application.self-7862a8a8b42407b4741a1adeeea35f0d13ddc4f702ec532adb0674491d296495.js?body=1" for 127.0.0.1 at 2016-09-30 14:25:35 -0300
+
+
+Started GET "/assets/glyphicons-halflings-regular-63faf0af44a428f182686f0d924bb30e369a9549630c7b98a969394f58431067.woff" for 127.0.0.1 at 2016-09-30 14:25:35 -0300
+
+
+Started GET "/assets/fontawesome-webfont-aadc3580d2b64ff5a7e6f1425587db4e8b033efcbf8f5c332ca52a5ed580c87c.woff2?v=4.3.0" for 127.0.0.1 at 2016-09-30 14:25:35 -0300
+
+
+Started GET "/historials" for 127.0.0.1 at 2016-09-30 14:25:43 -0300
+Processing by HistorialsController#index as HTML
+  [1m[35mHistorial Load (1.1ms)[0m  SELECT  "historials".* FROM "historials"  ORDER BY id ASC LIMIT 10 OFFSET 0
+  [1m[36mUsuario Load (0.6ms)[0m  [1mSELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mBeneficiario Load (1.3ms)[0m  SELECT  "beneficiarios".* FROM "beneficiarios" WHERE "beneficiarios"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mObjetivo Load (0.5ms)[0m  [1mSELECT  "objetivos".* FROM "objetivos" WHERE "objetivos"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mEstado Load (1.2ms)[0m  SELECT  "estados".* FROM "estados" WHERE "estados"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.2ms)[0m  [1mSELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.1ms)[0m  SELECT  "beneficiarios".* FROM "beneficiarios" WHERE "beneficiarios"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.1ms)[0m  [1mSELECT  "objetivos".* FROM "objetivos" WHERE "objetivos"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "estados".* FROM "estados" WHERE "estados"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "beneficiarios".* FROM "beneficiarios" WHERE "beneficiarios"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "objetivos".* FROM "objetivos" WHERE "objetivos"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "estados".* FROM "estados" WHERE "estados"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.1ms)[0m  SELECT  "beneficiarios".* FROM "beneficiarios" WHERE "beneficiarios"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.1ms)[0m  [1mSELECT  "objetivos".* FROM "objetivos" WHERE "objetivos"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.1ms)[0m  SELECT  "estados".* FROM "estados" WHERE "estados"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.1ms)[0m  [1mSELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "beneficiarios".* FROM "beneficiarios" WHERE "beneficiarios"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "objetivos".* FROM "objetivos" WHERE "objetivos"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "estados".* FROM "estados" WHERE "estados"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "beneficiarios".* FROM "beneficiarios" WHERE "beneficiarios"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "objetivos".* FROM "objetivos" WHERE "objetivos"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "estados".* FROM "estados" WHERE "estados"."id" = $1 LIMIT 1  [["id", 1]]
+  Rendered historials/index.html.erb within layouts/application (144.6ms)
+  Rendered layouts/_application_header.html.erb (0.5ms)
+  Rendered layouts/_application_sidebar.html.erb (1.2ms)
+Completed 200 OK in 259ms (Views: 245.2ms | ActiveRecord: 11.7ms)
+
+
+Started GET "/historials/1/editar" for 127.0.0.1 at 2016-09-30 14:25:46 -0300
+Processing by HistorialsController#editar as HTML
+  Parameters: {"id"=>"1"}
+  Rendered historials/_form.html.erb (6.0ms)
+  Rendered historials/editar.html.erb within layouts/application (9.5ms)
+Completed 500 Internal Server Error in 14ms (ActiveRecord: 0.0ms)
+
+ActionView::Template::Error (First argument in form cannot contain nil or be empty):
+    2:   <div class="row">
+    3:   <h2> </h2>
+    4:     <div class="col-md-12">
+    5:       <%= form_for(@historial, :html => { :role => "form" }) do |f| %>
+    6:         <% if @historials.errors.any? %>
+    7:           <div class="alert alert-danger alert-dismissable" role="alert">
+    8:             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+  app/views/historials/_form.html.erb:5:in `_app_views_historials__form_html_erb___3947087662943622403_70137185054120'
+  app/views/historials/editar.html.erb:13:in `_app_views_historials_editar_html_erb__480339315887441667_70137095675980'
+
+
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/_source.erb (20.0ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (10.9ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (3.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/template_error.html.erb within rescues/layout (75.3ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/_markup.html.erb (1.0ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (1.0ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.9ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/style.css.erb within layouts/inlined_string (1.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/console.js.erb within layouts/javascript (45.6ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/main.js.erb within layouts/javascript (0.9ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.9ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/index.html.erb (94.0ms)
+
+
+Started GET "/historials/1/editar" for 127.0.0.1 at 2016-09-30 14:26:57 -0300
+Processing by HistorialsController#editar as HTML
+  Parameters: {"id"=>"1"}
+  Rendered historials/_form.html.erb (14.4ms)
+  Rendered historials/editar.html.erb within layouts/application (16.5ms)
+Completed 500 Internal Server Error in 20ms (ActiveRecord: 0.0ms)
+
+ActionView::Template::Error (First argument in form cannot contain nil or be empty):
+    2:   <div class="row">
+    3:   <h2> </h2>
+    4:     <div class="col-md-12">
+    5:       <%= form_for(@historial) do |f| %>
+    6:         <% if @historials.errors.any? %>
+    7:           <div class="alert alert-danger alert-dismissable" role="alert">
+    8:             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+  app/views/historials/_form.html.erb:5:in `_app_views_historials__form_html_erb___3947087662943622403_70137312204600'
+  app/views/historials/editar.html.erb:13:in `_app_views_historials_editar_html_erb__480339315887441667_70137095675980'
+
+
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/_source.erb (16.9ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (6.9ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (2.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/template_error.html.erb within rescues/layout (48.0ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/_markup.html.erb (0.6ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (0.5ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.5ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/console.js.erb within layouts/javascript (26.6ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/main.js.erb within layouts/javascript (0.6ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.6ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/index.html.erb (52.5ms)
+
+
+Started GET "/historials" for 127.0.0.1 at 2016-09-30 14:27:12 -0300
+Processing by HistorialsController#index as HTML
+  [1m[36mHistorial Load (1.1ms)[0m  [1mSELECT  "historials".* FROM "historials"  ORDER BY id ASC LIMIT 10 OFFSET 0[0m
+  [1m[35mUsuario Load (0.8ms)[0m  SELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mBeneficiario Load (0.7ms)[0m  [1mSELECT  "beneficiarios".* FROM "beneficiarios" WHERE "beneficiarios"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mObjetivo Load (1.3ms)[0m  SELECT  "objetivos".* FROM "objetivos" WHERE "objetivos"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mEstado Load (1.2ms)[0m  [1mSELECT  "estados".* FROM "estados" WHERE "estados"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "beneficiarios".* FROM "beneficiarios" WHERE "beneficiarios"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "objetivos".* FROM "objetivos" WHERE "objetivos"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "estados".* FROM "estados" WHERE "estados"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "beneficiarios".* FROM "beneficiarios" WHERE "beneficiarios"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "objetivos".* FROM "objetivos" WHERE "objetivos"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "estados".* FROM "estados" WHERE "estados"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "beneficiarios".* FROM "beneficiarios" WHERE "beneficiarios"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "objetivos".* FROM "objetivos" WHERE "objetivos"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "estados".* FROM "estados" WHERE "estados"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "beneficiarios".* FROM "beneficiarios" WHERE "beneficiarios"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "objetivos".* FROM "objetivos" WHERE "objetivos"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "estados".* FROM "estados" WHERE "estados"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.1ms)[0m  SELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "beneficiarios".* FROM "beneficiarios" WHERE "beneficiarios"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "objetivos".* FROM "objetivos" WHERE "objetivos"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "estados".* FROM "estados" WHERE "estados"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  Rendered historials/index.html.erb within layouts/application (42.0ms)
+  Rendered layouts/_application_header.html.erb (0.3ms)
+  Rendered layouts/_application_sidebar.html.erb (1.0ms)
+Completed 200 OK in 159ms (Views: 151.1ms | ActiveRecord: 5.9ms)
+
+
+Started GET "/historials/1/editar" for 127.0.0.1 at 2016-09-30 14:27:16 -0300
+Processing by HistorialsController#editar as HTML
+  Parameters: {"id"=>"1"}
+  Rendered historials/_form.html.erb (3.9ms)
+  Rendered historials/editar.html.erb within layouts/application (5.7ms)
+Completed 500 Internal Server Error in 9ms (ActiveRecord: 0.0ms)
+
+ActionView::Template::Error (First argument in form cannot contain nil or be empty):
+    2:   <div class="row">
+    3:   <h2> </h2>
+    4:     <div class="col-md-12">
+    5:       <%= form_for(@historial) do |f| %>
+    6:         <% if @historials.errors.any? %>
+    7:           <div class="alert alert-danger alert-dismissable" role="alert">
+    8:             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+  app/views/historials/_form.html.erb:5:in `_app_views_historials__form_html_erb___3947087662943622403_70137312204600'
+  app/views/historials/editar.html.erb:13:in `_app_views_historials_editar_html_erb__480339315887441667_70137095675980'
+
+
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/_source.erb (26.8ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (9.7ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (2.6ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/actionpack-4.2.6/lib/action_dispatch/middleware/templates/rescues/template_error.html.erb within rescues/layout (60.6ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/_markup.html.erb (0.8ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/_inner_console_markup.html.erb within layouts/inlined_string (1.2ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/_prompt_box_markup.html.erb within layouts/inlined_string (0.9ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/style.css.erb within layouts/inlined_string (0.8ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/console.js.erb within layouts/javascript (29.9ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/main.js.erb within layouts/javascript (0.6ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/error_page.js.erb within layouts/javascript (1.0ms)
+  Rendered /usr/local/lib/ruby/gems/2.2.0/gems/web-console-2.3.0/lib/web_console/templates/index.html.erb (59.0ms)
+
+
+Started GET "/historials" for 127.0.0.1 at 2016-09-30 14:27:26 -0300
+Processing by HistorialsController#index as HTML
+  [1m[35mHistorial Load (1.1ms)[0m  SELECT  "historials".* FROM "historials"  ORDER BY id ASC LIMIT 10 OFFSET 0
+  [1m[36mUsuario Load (0.8ms)[0m  [1mSELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mBeneficiario Load (1.4ms)[0m  SELECT  "beneficiarios".* FROM "beneficiarios" WHERE "beneficiarios"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mObjetivo Load (0.6ms)[0m  [1mSELECT  "objetivos".* FROM "objetivos" WHERE "objetivos"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mEstado Load (0.9ms)[0m  SELECT  "estados".* FROM "estados" WHERE "estados"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.1ms)[0m  [1mSELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "beneficiarios".* FROM "beneficiarios" WHERE "beneficiarios"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "objetivos".* FROM "objetivos" WHERE "objetivos"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "estados".* FROM "estados" WHERE "estados"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "beneficiarios".* FROM "beneficiarios" WHERE "beneficiarios"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "objetivos".* FROM "objetivos" WHERE "objetivos"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "estados".* FROM "estados" WHERE "estados"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.1ms)[0m  [1mSELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "beneficiarios".* FROM "beneficiarios" WHERE "beneficiarios"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "objetivos".* FROM "objetivos" WHERE "objetivos"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.1ms)[0m  SELECT  "estados".* FROM "estados" WHERE "estados"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "beneficiarios".* FROM "beneficiarios" WHERE "beneficiarios"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "objetivos".* FROM "objetivos" WHERE "objetivos"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "estados".* FROM "estados" WHERE "estados"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "usuarios".* FROM "usuarios" WHERE "usuarios"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "beneficiarios".* FROM "beneficiarios" WHERE "beneficiarios"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "objetivos".* FROM "objetivos" WHERE "objetivos"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "estados".* FROM "estados" WHERE "estados"."id" = $1 LIMIT 1  [["id", 1]]
+  Rendered historials/index.html.erb within layouts/application (47.9ms)
+  Rendered layouts/_application_header.html.erb (0.3ms)
+  Rendered layouts/_application_sidebar.html.erb (1.2ms)
+Completed 200 OK in 153ms (Views: 145.5ms | ActiveRecord: 5.8ms)

@@ -1,0 +1,31 @@
+<% content_for :content_header  do %>
+    <section class="content-header">
+      <h1>Historial</h1>
+    </section>
+<% end %>
+
+<section class="content invoice">
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Usuario</th>
+      <th>Beneficiario</th>
+      <th>Objetivos</th>
+      <th>Estado</th>
+      <th>Evaluado</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @historials.each do |historial|%>
+        <tr>
+          <td><%= historial.usuario.email%></td>
+          <td><%= historial.beneficiario.nombre%> </td>
+          <td><%= historial.objetivo.nombre %> </td>
+          <td><%= historial.estado.nombre%> </td>          
+          <td><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span><%= link_to 'Editar',editar_historial_path(historial) %></td>
+        </tr>
+    <%end%>
+    </tbody>
+  </table>
+  <%= will_paginate @historials, renderer: BootstrapPagination::Rails %>
+</section>
